@@ -1,0 +1,52 @@
+{
+    "version": "3",
+    "services": {
+       "containerA": {
+          "image": "eu.gcr.io/myProj/containerA",
+          "restart": "unless-stopped",
+          "ports": [
+             "5672:5672",
+             "15672:15672"
+          ]
+       },
+       "orchestrator": {
+          "image": "eu.gcr.io/myProj/orchestrator",
+          "volumes": [
+             "site-case:/site/case",
+             "localStorage:/storage"
+          ],
+          "environment": [],
+          "depends_on": [
+             "containerA",
+             "engine"
+          ]
+       },
+       "engine": {
+          "image": "eu.gcr.io/myProj/engine",
+          "restart": "unless-stopped",
+          "environment": [
+             "PYTHONUNBUFFERED=0"
+          ],
+          "volumes": [
+             "site-case:/site/case",
+             "localstorage:/storage"
+          ],
+          "depends_on": [
+             "containerA"
+          ]
+       }
+    },
+    "volumes": {
+       "localStorage": {
+          "external": true
+       },
+       "site-case": null
+    },
+    "networks": {
+       "default": {
+          "external": {
+             "name": "my-net"
+          }
+       }
+    }
+ }

@@ -1,0 +1,68 @@
+{
+    "apiVersion": "apps/v1",
+    "kind": "Deployment",
+    "metadata": {
+      "name": "",
+      "labels": {
+        "app": ""
+      }
+    },
+    "spec": {
+      "replicas": 3,
+      "selector": {
+        "matchLabels": {
+          "app": ""
+        }
+      },
+      "template": {
+        "metadata": {
+          "labels": {
+            "app": ""
+          }
+        },
+        "spec": {
+          "containers": [
+            {
+              "name": "containerA",
+              "image": "eu.gcr.io/myProj/containerA",
+              "ports": [
+                {
+                  "containerPort": 5672
+                },
+                {
+                    "containerPort": 15672
+                  }
+              ]
+            },
+            {
+                "name": "orchestrator",
+                "image": "eu.gcr.io/myProj/orchestrator",
+                "ports": [
+                  {
+                    "containerPort": 8080
+                  }
+                ],
+                "env": [
+                    {
+                        "name": "SIM_MODE",
+                        "value": "kubernetes"
+                    }
+                ],
+                "volumeMounts": {
+                    "name": "site-case",
+                    "mountPath": "/site/case"
+                }
+            },
+            {
+                "name": "engine",
+                "image": "eu.gcr.io/myProj/engine",
+                "volumeMounts": {
+                    "name": "site-case",
+                    "mountPath": "/site/case"
+                }
+            }
+          ]
+        }
+      }
+}
+}
